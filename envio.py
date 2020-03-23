@@ -11,12 +11,8 @@ import base64
 
 app = Flask(__name__)
 # If modifying these scopes, delete the file token.pickle.
-#SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
-SCOPES = ['https://mail.google.com/']
+SCOPES = ['https://mail.google.com/'] #O link é diferente dependendo da credencial que a aplicação precisa
 
-"""
-Lista a lista de marcadores no Gmail do usuário.
-"""
 creds = None
 # O arquivo token.pickle armazena os tokens de acesso do usuário, e é
 # criado automaticamente quando o processo de autenticação é completado
@@ -37,17 +33,6 @@ if not creds or not creds.valid:
         pickle.dump(creds, token)
 
 service = build('gmail', 'v1', credentials=creds)
-
-# Chamada da API Gmail
-results = service.users().labels().list(userId='me').execute()
-labels = results.get('labels', [])
-
-if not labels:
-    print('Nenhum marcador encontrado')
-else:
-    print('Marcadores:')
-    for label in labels:
-        print(label['name'])
 
 @app.route('/', methods = ['GET','POST'])
 def envia_mensagem():
