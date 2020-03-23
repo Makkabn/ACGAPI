@@ -1,0 +1,19 @@
+body{
+	margin: 0 auto;
+	width: 500px;
+}
+
+label{
+	float: left;
+	width: 6em;
+	text-align: right;
+}
+
+input, textarea{
+	text-align:left;
+}
+
+button{
+	margin-left: 14em;
+}
+

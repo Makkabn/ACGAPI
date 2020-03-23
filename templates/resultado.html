@@ -1,0 +1,13 @@
+<html>
+<head>
+	<title>{{ title }}</title> 
+</head>
+<body>
+	{% if sucesso  == True %}
+		Mensagem enviada com sucesso!
+	{% else %}
+		Ocorreu um erro ao enviar o email.</br>
+		{{ erro }}
+	{% endif %}
+</body>
+</html>

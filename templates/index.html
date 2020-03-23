@@ -1,0 +1,17 @@
+<html>
+<head>
+	<title>Enviar Email</title> 
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+	<form action="/" method="POST">
+		<label>Para</label>
+		<input type="text" id="para" name="para" autocomplete="off" /><br>
+		<label>Assunto</label>
+		<input type="text" id="assunto" name="assunto" autocomplete="off" /><br>
+		<label>Mensagem</label>
+		<textarea rows = "10" cols = "40" name = "texto"></textarea><br>
+		<button type="submit">Enviar</button>
+	</form>
+</body>
+</html>
