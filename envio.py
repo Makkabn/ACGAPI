@@ -20,7 +20,7 @@ creds = None
 if os.path.exists('token.pickle'):
     with open('token.pickle', 'rb') as token:
         creds = pickle.load(token)
-# Se não existirem  credenciais válidas, pede pro usuário se logar.
+# Se não existirem  credenciais válidas, pede pro usuário se logar(conta do google)
 if not creds or not creds.valid:
     if creds and creds.expired and creds.refresh_token:
          creds.refresh(Request())
@@ -28,7 +28,7 @@ if not creds or not creds.valid:
         flow = InstalledAppFlow.from_client_secrets_file(
                 'credentials.json', SCOPES)
         creds = flow.run_local_server(port=0)
-    # Salva as credenciais para a próxima vez.
+    # Salva as credenciais
     with open('token.pickle', 'wb') as token:
         pickle.dump(creds, token)
 
@@ -36,39 +36,31 @@ service = build('gmail', 'v1', credentials=creds)
 
 @app.route('/', methods = ['GET','POST'])
 def envia_mensagem():
-    """
-    Args:
-        de: Email de quem está enviando. O valor 'me' pode ser usado, representando
-        o usuário autenticado no começo.
-        para: Email de quem vai receber.
-        assunto: O assunto da mensagem.
-        texto: O corpo da mensagem.
-
-    Retorna um objeto contendo um 'base64url encoded email object'.
-    """
     if request.method == 'GET':
-        return render_template('index.html')
+        return render_template('index.html') 
 
-    de = 'me'
-    para = request.form["para"]
+
+    #Criando a mensagem/definindo os parâmetros
+    de = 'me' #O valor 'me' pode ser usado no lugar do remetente, representando o usuário autenticado no começo.
+    para = request.form["para"] #Pegando as informações do form html
     assunto = request.form["assunto"]
     texto = request.form["texto"]
-    message = MIMEText(texto)
+    message = MIMEText(texto) #Transforma o texto para o formato MIME
     message['to'] = para
     message['from'] = de
     message['subject'] = assunto
 
     
-    raw = base64.urlsafe_b64encode(message.as_bytes())
-    raw = raw.decode()
+    raw = base64.urlsafe_b64encode(message.as_bytes()) #Esse seria o formato certo da mensagem
+    raw = raw.decode() #Porém é necessário transformar em string pra poder tratar como JSON
     corpo = {'raw': raw}
     
 
     
     try:
-        message = (service.users().messages().send(userId=de, body=corpo).execute())
+        message = (service.users().messages().send(userId=de, body=corpo).execute())#Enviando de fato a mensagem
         print ('Id da mensagem: %s' % message['id'])
-        sucesso = True
+        sucesso = True #A variável sucesso determina o que está escrito na página retornada
         title = 'Mensagem Enviada!'
         return render_template("resultado.html", title = title, sucesso = sucesso)
     except Exception as error:
